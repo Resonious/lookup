@@ -112,6 +112,8 @@ form.onsubmit = (event) => {
   event.preventDefault();
   query = input.value;
   search();
+  // hack to get the cursor off the text input on some devices..
+  document.querySelector('.padding').focus();
 }
 
 search();
