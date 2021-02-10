@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Dict lookup 🔎</title>
+    <meta name="author" content="Nigel Baillie">
+    <meta name="description" content="Look up a few JA dictionaries all at once">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+html,body,#content {
+  height: 100%;
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+}
+
+.back {
+  width: 100%;
+  min-height: 4em;
+  flex-grow: 1;
+}
+
+.box {
+  display: flex;
+  flex-direction: row;
+}
+
+.expanded {
+  height: 100%;
+}
+.expanded iframe {
+  height: 100%;
+  width: 100%;
+}
+    </style>
+  </head>
+
+  <body>
+    <div id='content'>
+      <button class='back' type='button' onclick='javascript:history.back()'>Back</button>
+    </div>
+
+    <script>
+const content = document.getElementById('content');
+const frames = {};
+
+function addFrame(name, url) {
+  const query = location.hash.substr(1);
+  const frame = frames[name] || (() => {
+    const box = document.createElement('div');
+    box.classList.add('box');
+
+    const f = document.createElement('iframe');
+
+    const expand = document.createElement('button');
+    expand.classList.add('expand');
+    expand.onclick = (event) => {
+      const boxes = document.querySelectorAll('.box');
+      for (const b of boxes) {
+        if (b == box) continue;
+        b.remove();
+      }
+      box.classList.add('expanded');
+      event.target.remove();
+    }
+    expand.textContent = '🔎';
+
+    box.appendChild(f);
+    box.appendChild(expand);
+
+    content.prepend(box);
+
+    return f;
+  })();
+
+  frame.src = url(query)
+  frame.height = 300;
+
+  frames[name] = frame;
+}
+
+function search() {
+  addFrame('weblio', q => `https://www.weblio.jp/content_find/contains/0/${q}#cntFdCntW`);
+  addFrame('jitenon', q => `https://kokugo.jitenon.jp/cat/search.php?getdata=${q}&search=contain#radical`);
+}
+
+search();
+window.addEventListener("hashchange", search, false);
+    </script>
+  </body>
+</html>
