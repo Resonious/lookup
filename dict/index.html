@@ -21,12 +21,17 @@ iframe {
   flex-direction: column;
 }
 
-.query {
+form {
   width: 100%;
   min-height: 4em;
   flex-grow: 1;
+  margin-bottom: 4em;
+}
+      
+.query {
+  width: 100%;
+  min-height: 4em;
   text-align: center;
-  margin-bottom: 1em;
 }
 
 .box {
@@ -45,7 +50,7 @@ iframe {
 
   <body>
     <div id='content'>
-      <input name='query' class='query' id='query' value='' />
+      <form><input name='query' class='query' id='query' value='' /></form>
     </div>
 
     <script>
@@ -94,7 +99,13 @@ function search() {
       
 const input = document.getElementById('query');
 input.value = decodeURI(location.hash.substr(1));
-input.addEventListener('input', e => { query = e.target.value; search() });
+
+const form = input.closest('form');
+form.onsubmit = (event) => {
+  event.preventDefault();
+  query = input.value;
+  search();
+}
 
 search();
 window.addEventListener('hashchange', () => { query = location.hash.substr(1); input.value = query; search() }, false);
