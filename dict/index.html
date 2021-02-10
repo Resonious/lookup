@@ -21,7 +21,7 @@ iframe {
   flex-direction: column;
 }
 
-.back {
+.query {
   width: 100%;
   min-height: 4em;
   flex-grow: 1;
@@ -43,7 +43,7 @@ iframe {
 
   <body>
     <div id='content'>
-      <button class='back' type='button' onclick='javascript:history.back()'>Back</button>
+      <input name='query' class='query' id='query' value='' />
     </div>
 
     <script>
@@ -89,9 +89,13 @@ function search() {
   addFrame('weblio', q => `https://www.weblio.jp/content_find/contains/0/${q}#cntFdCntW`);
   addFrame('jitenon', q => `https://kokugo.jitenon.jp/cat/search.php?getdata=${q}&search=contain#radical`);
 }
+      
+const input = document.getElementById('query');
+input.value = location.hash.substr(1);
+input.addEventListener('change', e => { location.hash = `#${e.target.value}` });
 
 search();
-window.addEventListener("hashchange", search, false);
+window.addEventListener('hashchange', search, false);
     </script>
   </body>
 </html>
