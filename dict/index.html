@@ -25,6 +25,7 @@ iframe {
   width: 100%;
   min-height: 4em;
   flex-grow: 1;
+  text-align: center;
 }
 
 .box {
@@ -49,9 +50,9 @@ iframe {
     <script>
 const content = document.getElementById('content');
 const frames = {};
+let query = location.hash.substr(1);
 
 function addFrame(name, url) {
-  const query = location.hash.substr(1);
   const frame = frames[name] || (() => {
     const box = document.createElement('div');
     box.classList.add('box');
@@ -91,11 +92,11 @@ function search() {
 }
       
 const input = document.getElementById('query');
-input.value = location.hash.substr(1);
-input.addEventListener('change', e => { location.hash = `#${e.target.value}` });
+input.value = decodeURI(location.hash.substr(1));
+input.addEventListener('input', e => { query = e.target.value });
 
 search();
-window.addEventListener('hashchange', search, false);
+window.addEventListener('hashchange', () => { query = location.hash.substr(1); search() }, false);
     </script>
   </body>
 </html>
